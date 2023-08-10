@@ -1,0 +1,20 @@
+.popup__close-btn_type_big-picture {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  cursor: pointer;
+  transition: opacity 1s;
+}
+
+.popup__close-btn:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 550px) {
+  .popup__close-btn_type_big-picture {
+    width: 20px;
+    background-size: cover;
+    top: -37px;
+    right: 0;
+  }
+}
