@@ -1,10 +1,11 @@
 const allowedCors = [
   'https://mestokarma.nomoreparties.co/',
+  'http://localhost:3000',
 ];
 
 const cors = (req, res, next) => {
-  const { origin } = req.headers;
   const { method } = req;
+  const { origin } = req.headers;
   const DEFAULT_ALLOWED_METHODS = 'GET, PUT, PATCH, POST, DELETE, HEAD';
   const requestHeaders = req.headers['access-control-request-headers'];
 

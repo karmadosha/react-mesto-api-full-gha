@@ -3,14 +3,14 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-/* const cors = require('cors'); */
+const cors = require('cors');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const rateLimit = require('express-rate-limit');
 const router = require('./routes/index');
 const errorHandler = require('./middlewares/errorhandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors');
+/* const cors = require('./middlewares/cors'); */
 
 const { PORT, DB } = process.env;
 
@@ -30,7 +30,7 @@ const limiter = rateLimit({
 
 app.use(helmet());
 app.use(limiter);
-app.use(cors());
+app.use(cors({ origin: ['https://mestokarma.nomoreparties.co/', 'http://localhost:3000'] }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
