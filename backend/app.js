@@ -30,7 +30,7 @@ const limiter = rateLimit({
 
 app.use(helmet());
 app.use(limiter);
-app.use(cors({ origin: ['https://mestokarma.nomoreparties.co/', 'http://mestokarma.nomoreparties.co/', 'http://localhost:3000'] }));
+app.use(cors({ origin: ['https://mestokarma.nomoreparties.co', 'http://mestokarma.nomoreparties.co', 'http://localhost:3000'] }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
