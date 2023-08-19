@@ -33,13 +33,13 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem('jwt')) {   
-      const jwt = localStorage.getItem('jwt');
-      auth.checkToken(jwt)
+    if (localStorage.getItem('token')) {   
+      const token = localStorage.getItem('token');
+      auth.checkToken(token)
         .then((res) => {
           if (res) {
             setIsLoggedIn(true);
-            setUserEmail(res.data.email);
+            setUserEmail(res.email);
             navigate('/', {replace: true});
           }
         })
@@ -51,26 +51,34 @@ function App() {
       }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     if (isLoggedIn) {
-      Promise.all([
-        api.getUserInfo(),
-        api.getInitialCards()
-      ])
-        .then(([userData, cardsData]) => {
-          setCurrentUser(userData);
-          setCards(cardsData);
+      api.getUserInfo(token)
+      .then((userData) =>{
+        setCurrentUser(userData);
+        setUserEmail(userData.email);
+      })
+      .catch((err) => console.log(err));
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (isLoggedIn) {
+      api.getInitialCards(token)
+       .then((cards) => {
+          setCards(cards.reverse());
         })
         .catch((err) => console.log(err))
-    }
-    
+    }    
   }, [isLoggedIn])
 
-  function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+  function handleCardLike(card) {    
+    const isLiked = card.likes.some((i) => i === currentUser._id);    
 
     api.changeLikeStatus(card._id, !isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        setCards(state => state.map((c) => c._id === card._id ? newCard.data : c));
       })
       .catch((err) => console.log(err));
   }
@@ -88,8 +96,8 @@ function App() {
   function handleUpdateUser(data) {
     setIsLoading(true);
     api.editProfile(data)
-    .then((res) => {
-      setCurrentUser(res);
+    .then((data) => {
+      setCurrentUser(data);
       closeAllPopups();
     })
     .catch((err) => console.log(err))
@@ -107,11 +115,11 @@ function App() {
     .finally(() => setIsLoading(false));
   }
 
-  function handleAddPlaceSubmit(newCard) {
-    setIsLoading(true);
-    api.addNewCard(newCard)
+  function handleAddPlaceSubmit(data) {
+    setIsLoading(true);    
+    api.addNewCard(data)
     .then((newCard) => {
-      setCards([newCard, ...cards]);
+      setCards([newCard.data, ...cards]);
       closeAllPopups();
     })
     .catch((err) => console.log(err))
@@ -177,11 +185,11 @@ function App() {
   }
 
   function handleLogin(email, password) {
-    auth.authorize(email, password)
+    auth.login(email, password)
       .then(res => {
         if (res) {    
           setIsLoggedIn(true);
-          localStorage.setItem('jwt', res.token);
+          localStorage.setItem('token', res.token);
           setUserEmail(email);
           navigate('/', {replace: true});
         }
@@ -195,7 +203,7 @@ function App() {
   
   function handleSignOut() {
     setIsLoggedIn(false);
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     navigate('/signin', {repalce: true});
   }
 

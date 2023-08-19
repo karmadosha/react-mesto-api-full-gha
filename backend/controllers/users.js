@@ -42,7 +42,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      res.send({ _id: token });
+      res.send({ token });
     })
     .catch(next);
 };
@@ -88,7 +88,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         return next(new ErrorNotFound('Пользователь не найден'));
       }
-      return res.send({ avatar });
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {

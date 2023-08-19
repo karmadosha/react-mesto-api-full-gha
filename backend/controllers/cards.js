@@ -5,7 +5,7 @@ const ErrorForbidden = require('../utils/errors/err-forbidden');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
@@ -53,7 +53,7 @@ module.exports.addLike = (req, res, next) => {
       if (!card) {
         throw new ErrorNotFound('Карточка не найдена');
       }
-      return res.send({ card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -73,7 +73,7 @@ module.exports.deleteLike = (req, res, next) => {
       if (!card) {
         throw new ErrorNotFound('Карточка не найдена');
       }
-      return res.send({ card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'validationError') {
