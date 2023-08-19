@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3001/';
+export const BASE_URL = 'http://api.mestokarma.nomoreparties.co/';
 
 const checkResponse = (res) => {
   if (res.ok) {
