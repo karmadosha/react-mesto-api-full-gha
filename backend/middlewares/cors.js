@@ -1,5 +1,5 @@
 const allowedCors = [
-  'http://mestokarma.nomoreparties.co/',
+  'https://mestokarma.nomoreparties.co/',
 ];
 
 const cors = (req, res, next) => {
