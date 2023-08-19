@@ -1,5 +1,5 @@
 const allowedCors = [
-  'http://localhost:3000',
+  'http://mestokarma.nomoreparties.co/',
 ];
 
 const cors = (req, res, next) => {
