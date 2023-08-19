@@ -99,7 +99,7 @@ class Api {
 }
 
 const api = new Api({  
-  baseUrl: 'http://api.mestokarma.nomoreparties.co',
+  baseUrl: 'https://api.mestokarma.nomoreparties.co',
   headers: {
   'Content-type': 'application/json',  
   }
