@@ -5,10 +5,12 @@ const ErrorNotFound = require('../utils/errors/err-not-found');
 const ErrorBadRequest = require('../utils/errors/err-bad-request');
 const ErrorNotUnique = require('../utils/errors/err-not-unique');
 
+const { NODE_ENV, SECRET_KEY } = process.env;
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -41,7 +43,11 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? SECRET_KEY : 'some-secret-key',
+        { expiresIn: '7d' },
+      );
       res.send({ token });
     })
     .catch(next);
@@ -69,7 +75,7 @@ module.exports.updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        return next(new ErrorBadRequest('Пользователь не найден'));
+        return next(new ErrorNotFound('Пользователь не найден'));
       }
       return res.send(user);
     })
